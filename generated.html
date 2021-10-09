@@ -1,0 +1,133 @@
+<head>
+    <title>NJTrans Dupe</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+    <script data-ad-client="ca-pub-1234567890123456" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/mdbassit/Coloris@latest/dist/coloris.min.css"/>
+<script src="https://cdn.jsdelivr.net/gh/mdbassit/Coloris@latest/dist/coloris.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<script type="text/javascript" src="js/main.js"></script>
+
+<div class="container" onload="loadData();">
+    <div class="col" style="height: 170px">
+        <div id="passBox" style="font-size: 17px;">
+            One Way
+            <p style="font-size: 20px;padding-bottom: 15px;">1 Adult</p>
+        </div>
+        <div class="images">
+            <img src="img/qr.png" id="qrCode">
+            <p>Tap to enlarge</p>
+        </div>
+    </div>
+    <div class="col">
+        <div id="fromWhere">
+            INTERSTATE
+        </div>
+        <div class="imageZone">
+            <img src="img/ZoneRide.png" width="100%" height="140px">
+            <div id="zoneNum">
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+        <div id="currentTime" onload="startTime();"></div>
+        <div id="currentDate"></div>
+        <div class="col" style="width: 100%; height:30px; margin-top:10px; margin-left: 20px;">
+            <div id="coloredBoxes1"></div>
+            <div id="coloredBoxes2"></div>
+            <div id="coloredBoxes3"></div>
+        </div>
+        <div id="expiration"></div>
+        <img src="img/hud.png" width="100%" style="padding-top: 15px;">
+        <script>
+            (function() {
+            var start = new Date;
+            var flicker = true
+            loadToday();
+            function loadToday(){
+                var weekday = new Array(7);
+                weekday[0] = "Sunday";
+                weekday[1] = "Monday";
+                weekday[2] = "Tuesday";
+                weekday[3] = "Wednesday";
+                weekday[4] = "Thursday";
+                weekday[5] = "Friday";
+                weekday[6] = "Saturday";
+
+                var monthAnc = new Array(12)
+                monthAnc[0] = "Jan";
+                monthAnc[1] = "Feb";
+                monthAnc[2] = "March";
+                monthAnc[3] = "April";
+                monthAnc[4] = "May";
+                monthAnc[5] = "June";
+                monthAnc[6] = "July";
+                monthAnc[7] = "Aug";
+                monthAnc[8] = "Sept";
+                monthAnc[9] = "Oct";
+                monthAnc[10] = "Nov";
+                monthAnc[11] = "Dec";
+
+                var todayDate = new Date;
+                var date = weekday[todayDate.getDay()]+', '+ monthAnc[todayDate.getMonth()]+' '+todayDate.getDate()+', '+todayDate.getFullYear();
+                document.getElementById("currentDate").innerHTML = date
+            }
+            function pad(num) {
+                return ("0" + parseInt(num)).substr(-2);
+            }
+            start.setHours(1, 0, 0);
+            function tick() {
+                var todayDate = new Date;
+                var hours = todayDate.getHours();
+                var minutes = todayDate.getMinutes();
+                var seconds = todayDate.getSeconds();
+                var ampm = hours >= 12 ? 'PM' : 'AM';
+                hours = hours % 12;
+                hours = hours ? hours : 12; // the hour '0' should be '12'
+                minutes = minutes < 10 ? '0'+minutes : minutes;
+                hours = checkTime(hours);
+                seconds = checkTime(seconds);
+                document.getElementById("currentTime").innerHTML = hours + ':' + minutes + ':' + seconds + ' ' + ampm;
+
+                var remain = ((start - todayDate) / 1000);
+
+                if(flicker)
+                {
+                    document.getElementById("coloredBoxes1").style.visibility = 'hidden';
+                    document.getElementById("coloredBoxes2").style.visibility = 'hidden';
+                    document.getElementById("coloredBoxes3").style.visibility = 'hidden';
+                    flicker = false
+                }
+                else
+                {
+                    document.getElementById("coloredBoxes1").style.visibility = 'visible';
+                    document.getElementById("coloredBoxes2").style.visibility = 'visible';
+                    document.getElementById("coloredBoxes3").style.visibility = 'visible';
+                    flicker = true
+                }
+
+                var now = new Date;
+                if (now > start) { // too late, go to tomorrow
+                start.setDate(start.getDate() + 1);
+                }
+                var remain = ((start - now) / 1000);
+                var hh = pad((remain / 60 / 60) % 60);
+                var mm = pad((remain / 60) % 60);
+                var ss = pad(remain % 60);
+                document.getElementById('expiration').innerHTML = "Expires in 00:00:" + mm + ":" + ss;
+                setTimeout(tick, 500);
+            }
+
+            function checkTime(i) {
+                if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10
+                return i;
+            }
+
+            document.addEventListener('DOMContentLoaded', tick);
+            })();
+        </script>
+    </div>
+</div>
