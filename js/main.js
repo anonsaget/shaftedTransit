@@ -78,6 +78,7 @@ function loadData(){
 }
 
 window.onload = function () { 
+	window.scrollTo(0,1)
 	document.getElementById('fromWhere').innerHTML = getCookie('fromWhereC');
 	document.getElementById('fromWhere').style.color = getCookie('fromColorC');
 	document.getElementById('zoneNum').innerHTML = getCookie('zonesC');
