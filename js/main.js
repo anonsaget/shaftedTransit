@@ -17,15 +17,18 @@ function onClick(){
 	if(fromWhere == 'INTERSTATE')
 		fromColor = "rgb(255,0,0)"
 	
-	setCookie('fromWhereC', fromWhere.toUpperCase(), 1)
-	setCookie('fromColorC', fromColor, 1)
-	setCookie('zonesC', zones, 1)
-	setCookie('ticketColor', colorArr[0], 1)
-	setCookie('color1', colorArr[1], 1)
-	setCookie('color2', colorArr[2], 1)
-	setCookie('color3', colorArr[3], 1)
-	
-	window.location.href = "generated.html";
+
+	const params = new URLSearchParams({
+			fromWhereA: fromWhere,
+			fromWhereCo: fromColor,
+			zoneNumA: zones,
+			ticketColorA: colorArr[0],
+			color1A: colorArr[1],
+			color2A: colorArr[2],
+			color3A: colorArr[3]
+		});
+	var separator = (window.location.href.indexOf("?")===-1)?"?":"&";
+	window.location.href = "generated.html" + separator + params;
 
 }
 
@@ -64,20 +67,13 @@ function deleteAllCookies() {
 window.onload = function () { 
 	window.scrollTo(0,1);
 	let here = new URL(window.location.href).searchParams;
-	here.append('fromWhereA', getCookie('fromWhereC'));
-	here.append('fromWhereCo', getCookie('fromColorC'));
-	here.append('zoneNumA', getCookie('zonesC'));
-	here.append('ticketColorA', getCookie('ticketColorC'));
-	here.append('coloredBox1', getCookie('color1'));
-	here.append('coloredBox2', getCookie('color2'));
-	here.append('coloredBox3', getCookie('color3'));
 	console.log(window.location.href);
 
 	document.getElementById('fromWhere').innerHTML = here.get('fromWhereA');
 	document.getElementById('fromWhere').style.color = here.get('fromWhereCo');
 	document.getElementById('zoneNum').innerHTML = here.get('zoneNumA');
-	//document.getElementById('ticketColor').innerHTML = getCookie('ticketColorC');
-	document.getElementById('coloredBoxes1').style.backgroundColor = here.get('coloredBox1');
-	document.getElementById('coloredBoxes2').style.backgroundColor = here.get('coloredBox2');
-	document.getElementById('coloredBoxes3').style.backgroundColor = here.get('coloredBox3');
+	//document.getElementById('ticketColor').innerHTML = getCookie('ticketColorA');
+	document.getElementById('coloredBoxes1').style.backgroundColor = here.get('color1A');
+	document.getElementById('coloredBoxes2').style.backgroundColor = here.get('color2A');
+	document.getElementById('coloredBoxes3').style.backgroundColor = here.get('color3A');
 }
