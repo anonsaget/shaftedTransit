@@ -197,6 +197,14 @@ user-select:none;
     text-align: center;
 }
 
+#ticketColor{
+    visibility: visible;
+    float:left;
+    width:30%;
+    height:20px;
+    background-color:red;
+}
+
 #coloredBoxes1{
     visibility: visible;
     float:left;
