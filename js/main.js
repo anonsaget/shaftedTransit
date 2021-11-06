@@ -1,5 +1,6 @@
 var colorArr = []
 var fromWhere;
+var ticketColorInput;
 var zones;
 var fromColor;
 
@@ -7,6 +8,8 @@ function onClick(){
 	//Get name or Interstate
 	fromWhere = document.getElementById("fromInput").value; 
 	zones = document.getElementById("zoneInput").value; 
+	ticketColorInput = document.getElementById("ticketColorInput").value; 
+
 	//Get colors
 	var inputColors = document.getElementsByClassName('clr-field');
 	for(i = 0; i < inputColors.length; i++) {
@@ -22,10 +25,10 @@ function onClick(){
 			fromWhereA: fromWhere,
 			fromWhereCo: fromColor,
 			zoneNumA: zones,
-			ticketColorA: colorArr[0],
-			color1A: colorArr[1],
-			color2A: colorArr[2],
-			color3A: colorArr[3]
+			ticketColorA: ticketColorInput,
+			color1A: colorArr[0],
+			color2A: colorArr[1],
+			color3A: colorArr[2]
 		});
 	var separator = (window.location.href.indexOf("?")===-1)?"?":"&";
 	window.location.href = "generated.html" + separator + params;
@@ -72,8 +75,16 @@ window.onload = function () {
 	document.getElementById('fromWhere').innerHTML = here.get('fromWhereA');
 	document.getElementById('fromWhere').style.color = here.get('fromWhereCo');
 	document.getElementById('zoneNum').innerHTML = here.get('zoneNumA');
-	//document.getElementById('ticketColor').innerHTML = getCookie('ticketColorA');
+	document.getElementById('ticketColor').src = "img/" + here.get('ticketColorA') + ".png";
 	document.getElementById('coloredBoxes1').style.backgroundColor = here.get('color1A');
 	document.getElementById('coloredBoxes2').style.backgroundColor = here.get('color2A');
 	document.getElementById('coloredBoxes3').style.backgroundColor = here.get('color3A');
+
+
+	
+	const isInStandaloneMode = () => ('standalone' in window.navigator) && (window.navigator.standalone);
+	if (!isInStandaloneMode()) {
+		this.setState({ showInstallMessage: true });
+	  }
+
 }
