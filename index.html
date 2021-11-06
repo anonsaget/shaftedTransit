@@ -13,19 +13,33 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
-<meta name="viewport" content="viewport-fit=cover, user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="viewport" content="width=device-width, user-scalable=no">
     
 </head>
 <h1 class="logo">NJTrans Dupe</h1>
 
 <div class="container">
     <h3 class="subtitle">Are you Interstate (From/To NY) or Intrastate?</h3>    
-    <input id="fromInput" type="text" maxlength='24' required>
+    <select id="fromInput" maxlength='1' required>
+            <option>Interstate</option>  
+            <option>Intrastate</option>  
+    </select>
     <h3 class="subtitle">How many Zones?</h3>    
-    <input id="zoneInput" type="text" maxlength='1' required>
+    <select id="zoneInput" maxlength='1' required>
+            <option>1</option>  
+            <option>2</option>  
+            <option>3</option>  
+            <option>4</option>  
+    </select>  
+    <h3 class="subtitle">Select ticket color</h3>    
+    <select id="ticketColorInput" required>
+            <option>Red</option>  
+            <option>Blue</option>  
+            <option>Yellow</option>
+            <option>Green</option>    
+            <option>Gray</option>  
+    </select>
     <div class="colorselect full">
-        <h3 class="subtitle">Select ticket color</h3>    
-        <input class="colorpicker" type="text" data-coloris>
         <h3 class="subtitle">Select flashing colors</h3>    
         <input class="colorpicker" type="text" data-coloris>
         <input class="colorpicker" type="text" data-coloris>
