@@ -5,7 +5,7 @@ html, body {
   overflow-x: hidden;
 }
 .container {
-    display: flex;
+    display: block;
     flex-wrap: wrap;
     justify-content: space-between;
 }
@@ -47,6 +47,19 @@ user-select:none;
 }
 
 #fromInput {
+    background-color:#cecece;
+    border:0;
+    border-radius:20px;
+    color:rgb(0, 0, 0);
+    display:flex;
+    font-family:Montserrat, sans-serif;
+    height:30px;
+    margin:-25px auto auto 0px;
+    text-align:center;
+    margin: auto;
+    }
+
+#ticketColorInput {
     background-color:#cecece;
     border:0;
     border-radius:20px;
@@ -199,10 +212,6 @@ user-select:none;
 
 #ticketColor{
     visibility: visible;
-    float:left;
-    width:30%;
-    height:20px;
-    background-color:red;
 }
 
 #coloredBoxes1{
