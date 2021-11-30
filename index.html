@@ -48,9 +48,11 @@
         <input class="colorpicker" type="text" data-coloris>
     </div>
     <label for="img">Or upload a screenshot and generate it!:</label>
-    <input type='file' onclick="preview_image(event)"/>
+    <input type='file' id="inputPic"/>
     <img id="output_image" style="display: none;">
     <button class="button" type="button" onclick="onClick()">Generate</button>
+    <button class="button" type="button" style="font-size: 10px;margin-top: 10px" onclick="preview_image()">Generate from screenshot</button>
+
 </div>
 
 <script type="text/javascript">
