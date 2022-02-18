@@ -40,6 +40,7 @@
             <option>Yellow</option>
             <option>Green</option>    
             <option>Gray</option>  
+            <option>Purple</option>  
     </select>
     <div class="colorselect full">
         <h3 class="subtitle">Select flashing colors</h3>    
@@ -48,10 +49,123 @@
         <input class="colorpicker" type="text" data-coloris>
     </div>
     <label for="img">Or upload a screenshot and generate it!:</label>
-    <input type='file' id="inputPic"/>
     <img id="output_image" style="display: none;">
     <button class="button" type="button" onclick="onClick()">Generate</button>
-    <button class="button" type="button" style="font-size: 10px;margin-top: 10px" onclick="preview_image()">Generate from screenshot</button>
+    <input type="file" id="inputPic" hidden/>
+    <label class="button" for="inputPic" style=" margin-top: 10px;">Use Screenshot</label>
+    <canvas id="canvasInput" display="visible"> </canvas>
+    <script>
+        
+        document.getElementById("inputPic").onchange = function(e) {
+            document.getElementById("canvasInput").style.visibility = "visible"; 
+            var img = new Image();
+            img.onload = draw;
+            img.onerror = failed;
+            img.src = URL.createObjectURL(this.files[0]);
+        };
+
+        function deltaE(rgbA, rgbB) {
+            let labA = rgb2lab(rgbA);
+            let labB = rgb2lab(rgbB);
+            let deltaL = labA[0] - labB[0];
+            let deltaA = labA[1] - labB[1];
+            let deltaB = labA[2] - labB[2];
+            let c1 = Math.sqrt(labA[1] * labA[1] + labA[2] * labA[2]);
+            let c2 = Math.sqrt(labB[1] * labB[1] + labB[2] * labB[2]);
+            let deltaC = c1 - c2;
+            let deltaH = deltaA * deltaA + deltaB * deltaB - deltaC * deltaC;
+            deltaH = deltaH < 0 ? 0 : Math.sqrt(deltaH);
+            let sc = 1.0 + 0.045 * c1;
+            let sh = 1.0 + 0.015 * c1;
+            let deltaLKlsl = deltaL / (1.0);
+            let deltaCkcsc = deltaC / (sc);
+            let deltaHkhsh = deltaH / (sh);
+            let i = deltaLKlsl * deltaLKlsl + deltaCkcsc * deltaCkcsc + deltaHkhsh * deltaHkhsh;
+            return i < 0 ? 0 : Math.sqrt(i);
+        }
+
+        function rgb2lab(rgb){
+            let r = rgb[0] / 255, g = rgb[1] / 255, b = rgb[2] / 255, x, y, z;
+            r = (r > 0.04045) ? Math.pow((r + 0.055) / 1.055, 2.4) : r / 12.92;
+            g = (g > 0.04045) ? Math.pow((g + 0.055) / 1.055, 2.4) : g / 12.92;
+            b = (b > 0.04045) ? Math.pow((b + 0.055) / 1.055, 2.4) : b / 12.92;
+            x = (r * 0.4124 + g * 0.3576 + b * 0.1805) / 0.95047;
+            y = (r * 0.2126 + g * 0.7152 + b * 0.0722) / 1.00000;
+            z = (r * 0.0193 + g * 0.1192 + b * 0.9505) / 1.08883;
+            x = (x > 0.008856) ? Math.pow(x, 1/3) : (7.787 * x) + 16/116;
+            y = (y > 0.008856) ? Math.pow(y, 1/3) : (7.787 * y) + 16/116;
+            z = (z > 0.008856) ? Math.pow(z, 1/3) : (7.787 * z) + 16/116;
+            return [(116 * y) - 16, 500 * (x - y), 200 * (y - z)]
+        }
+
+        function draw() {
+            var canvas = document.getElementById('canvasInput');
+            canvas.width = 100
+            canvas.height = 100;
+            var ctx = canvas.getContext('2d');
+            console.log("Drawing")
+            ctx.drawImage(this, 0,0, 100, 100);
+
+            //Pixel Scanning time
+
+            var ticketColorTable = [
+				[121, 185, 126],//Green
+				[64, 140, 255],	//Blue
+				[247, 210, 216],//Red
+				[237, 111, 108],//DarkRed
+				[254, 224, 65], //Yellow
+                [161, 161, 161], //Gray
+                [206, 156, 205] //Purple
+			];	
+
+            var ticketColorScan = canvas.getContext('2d').getImageData(10, 42, 1, 1).data;
+            var rgbVal = ticketColorScan.toString();
+            console.log(rgbVal)
+            var ticketColAr = [];
+            rgbVal = rgbVal.replace(",255", "");
+            ticketColAr = rgbVal.split(',');
+            var col1 = parseInt(ticketColAr[0]);
+            var col2 = parseInt(ticketColAr[1]);
+            var col3 = parseInt(ticketColAr[2]);
+            var ticketColorArray = [col1, col2, col3]
+            console.log("input: " + ticketColorArray)
+
+            var finalTicketColr;
+            var ticketColNameArr = [
+                "Green",
+                "Blue",
+                "Red",
+                "DarkRed",
+                "Yellow",
+                "Gray",
+                "Purple"
+                ]
+            for(i = 0; i < ticketColorTable.length; i++){
+                if(deltaE(ticketColorTable[i], ticketColorArray) <= 3)
+                    finalTicketColr = ticketColNameArr[i];
+                }
+            console.log(finalTicketColr)
+            document.getElementById("ticketColorInput").value = finalTicketColr; 
+
+            var colorAr = [];
+            colorAr[0] = canvas.getContext('2d').getImageData(5, 85, 1, 1).data;
+            console.log(colorAr[0].toString())
+            colorAr[1] = canvas.getContext('2d').getImageData(25, 85, 1, 1).data;	
+            console.log(colorAr[1].toString())
+            colorAr[2] = canvas.getContext('2d').getImageData(85, 85, 1, 1).data;
+            console.log(colorAr[2].toString())
+            
+            var inputColors = document.getElementsByClassName('clr-field');
+                for(i = 0; i < inputColors.length; i++) {
+                            inputColors[i].style.color = "rgb(" + colorAr[i].toString() + ")";
+                }
+            
+            document.getElementById("canvasInput").style.visibility = "hidden"; 
+        }
+        function failed() {
+            console.error("The provided file couldn't be loaded as an Image media");
+        }
+    </script>
 
 </div>
 
