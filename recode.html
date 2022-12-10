@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ShaftedTransit</title>
+    <link rel="stylesheet" href="css/recode.css">
+    <script type="text/javascript" src="js/main.js"></script>
+</head>
+<body>
+    <h1 >ShaftedTransit</h1>
+    <form>
+        <label for="interstate-intrastate">Interstate or Intrastate:</label><br>
+        <select id="interstate-intrastate">
+            <option value="interstate">Interstate</option>
+            <option value="intrastate">Intrastate</option>
+        </select><br>
+        <label for="zones">How many zones:</label><br>
+        <select id="zones">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+        </select><br>
+        <label for="ticket-color">Ticket color:</label><br>             
+        <select id="ticket-color">
+            <option value="Green">Green</option>
+            <option value="Blue">Blue</option>
+            <option value="Pink">Pink</option>
+            <option value="Red">Red</option>
+            <option value="Yellow">Yellow</option>
+            <option value="Grey">Grey</option>
+            <option value="Purple">Purple</option>
+        </select><br><br>
+        <input id="color1" type="color" value="#ff0000">
+        <input id="color2" type="color" value="#00ff00">
+        <input id="color3" type="color" value="#0000ff">
+        <input type="file" id="screenshot" style="display: none">
+        <label for="screenshot" class="screenshot-button">Upload Screenshot</label>
+        <input type="button" onclick="onClick()" value="Generate">
+        <canvas id="screenshotDisplay"> </canvas>
+
+        <script src="js/generateSS.js"></script>
+
+    </form>
+</body>
+</html>
