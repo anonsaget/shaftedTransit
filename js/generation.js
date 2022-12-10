@@ -30,8 +30,10 @@ barColor3ID.style.backgroundColor = barColor3
 if (navigator.standalone === false) {
     // The user has not added your website to their homescreen as a web app
     console.log('The user has not added your website to their homescreen as a web app');
+    document.getElementById("alertbox").style.display = 'block'
   } else {
     // The user has added your website to their homescreen as a web app
     console.log('The user has added your website to their homescreen as a web app');
+    document.getElementById("alertbox").style.display = 'none'
   }
   
