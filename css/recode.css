@@ -1,0 +1,107 @@
+@font-face {
+    font-family: 'Helvetica-Nue';
+    src: url('fonts/Helvetica-Nue.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+body {
+    font-family:"Helvetica Neue", sans-serif;
+    font-size: 30px;
+    text-align: center;
+    color: #ffffff;
+    background-color: #161616;
+    display: block;
+    
+}
+
+
+@media screen and (max-width: 600px) {
+    body {
+        display: block;
+        font-size: 50px;
+        margin: auto;
+        flex-wrap: wrap;
+
+    }
+}
+
+select {
+    background-color: #cccccc;
+    border-radius: 25px;
+    text-align: center;
+    padding: 10px;
+    font-size: 40px;
+    height:75px;
+    width: 320px;
+}
+
+select:focus {
+    outline: none;
+    box-shadow: 0 0 5px #0000ff;
+}
+
+select::-ms-expand {
+    display: none;
+}
+
+input[type="button"] {
+    display: block;
+    background-color: #cccccc;
+    border-radius: 30px;
+    text-align: center;
+    padding: 10px;
+    font-size: 35px;
+    height:120px;
+    width: 55%;
+    margin: auto;
+}
+
+input[type="button"][value="Generate"] {
+    background-color: #2971b9;
+    color: #ffffff;
+    text-shadow: none;
+    
+    border: none;
+    box-shadow: 0 0 13px #2e77cb;
+    animation: glow 1s ease-in-out infinite alternate;
+}
+
+@keyframes glow {
+    from {
+        box-shadow: 0 0 5px #0080ff;
+    }
+    to {
+        box-shadow: 0 0 15px #0080ff;
+    }
+}
+
+input[type="color"] {
+    border: none;
+    margin: 0;
+    height: 80px;
+    width: 30%;
+}
+
+.screenshot-button {
+    display: block;
+    font-weight: normal;
+    background-color: #dcdcdc;
+    color:black;
+    border-radius: 30px;
+    text-align: center;
+    font-size: 35px;
+    width: 55%;
+    margin: auto;
+    margin-top: 150px;
+    margin-bottom: 120px;
+}
+
+
+label {
+    font-family:"Helvetica Neue", sans-serif;
+    font-weight: lighter;
+    font-size: 65px;
+    line-height: 90px;
+    margin: auto;
+}
