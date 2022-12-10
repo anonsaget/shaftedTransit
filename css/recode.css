@@ -105,3 +105,58 @@ label {
     line-height: 90px;
     margin: auto;
 }
+
+#alertbox {
+    position: fixed;
+    display: block;
+    top: 80%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 200px;
+    height: 20px;
+    background-color: #0f0e0e;
+    border-radius: 30px;
+    padding: 20px;
+    box-shadow: 0px 0px 10px #000000;
+    z-index: 9999;
+    text-align: center;
+    font-family: sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+  }
+  
+  #alertbox::before,
+  #alertbox::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 45%;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-color: transparent transparent #ffffff transparent;
+    border-width: 10px;
+    transform: translateX(-50%) rotate(180deg) translateY(60%);
+  }
+  
+  #alertbox::before {
+    border-color: transparent transparent #000000 transparent;
+    box-shadow: 0px 0px 10px #000000;
+  }
+  
+  #alertbox::after {
+    animation: bounce 0.5s ease-in-out infinite;
+  }
+  
+  @keyframes bounce {
+    0% {
+      transform: translateY(0) rotate(180deg);
+    }
+    50% {
+      transform: translateY(-5px) rotate(180deg);
+    }
+    100% {
+      transform: translateY(0) rotate(180deg);
+    }
+  }
+  
