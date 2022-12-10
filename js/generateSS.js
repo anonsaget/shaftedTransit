@@ -30,7 +30,7 @@ var txtColors = [
     "Pink",
     "Red",
     "Yellow",
-    "Grey",
+    "Gray",
     "Purple"
 ]
   
