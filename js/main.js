@@ -46,3 +46,4 @@ function onClick(){
 }
 
 button.addEventListener('click', onClick);
+button.addEventListener('touchstart', onClick);
