@@ -54,6 +54,7 @@ input[type="button"] {
     width: 55%;
     margin: auto;
     box-shadow: 0 0 13px #000000;
+    cursor: pointer;
 
 }
 
