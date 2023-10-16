@@ -44,3 +44,5 @@ function onClick(){
 	location.assign(`generated.html?fromWhere=${fromWhere}&fromColor=${fromColor}&zones=${zones}&ticketColor=${ticketColorInput}&color1=${colorArr[0]}&color2=${colorArr[1]}&color3=${colorArr[2]}`);
 
 }
+
+button.addEventListener('click', onClick);
