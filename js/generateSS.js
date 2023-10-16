@@ -1,131 +1,150 @@
-// Get the file input element
-var fileInput = document.getElementById("screenshot");
+var image = null;
+var generalColor = '';
+var specificColors = [null, null, null];
+var timeElapsed = 0;
 
-// Get a reference to the canvas element
-const canvas = document.getElementById('screenshotDisplay');
+var ticketColors = {
+  '190,135,192': 'Purple',
+  '254,207,215': 'Pink',
+  '248,96,98': 'Red',
+  '81,150,255': 'Blue',
+  '246,217,62': 'Yellow',
+  '98,172,97': 'Green',
+};
 
-const dropdownTxtColor = document.getElementById('ticket-color');
-const barColor1 = document.getElementById('color1');
-const barColor2 = document.getElementById('color2');
-const barColor3 = document.getElementById('color3');
-//Ticket Color at 30 Y Coordinate
+function handleImageUpload(event) {
+  var file = event.target.files[0];
+  var reader = new FileReader();
 
-//Ticket Color 1 X25 Y85
-//Ticket Color 2 X55 Y85
-//Ticket Color 3 X85 Y85
+  reader.onloadend = function() {
+    image = reader.result;
+    processImage();
+  };
 
+  reader.readAsDataURL(file);
+}
 
-var ticketColorTable = [
-    [121, 185, 126],//Green
-    [64, 140, 255],	//Blue
-    [247, 210, 216],//Red
-    [237, 111, 108],//DarkRed
-    [254, 224, 65], //Yellow
-    [161, 161, 161], //Gray
-    [206, 156, 205] //Purple
-];	
-var txtColors = [
-    "Green",
-    "Blue",
-    "Pink",
-    "Red",
-    "Yellow",
-    "Gray",
-    "Purple"
-]
+function processImage() {
+  if (image) {
+    var img = new Image();
+    img.crossOrigin = 'Anonymous';
+    img.src = image;
+    img.onload = function() {
+      var startTime = Date.now();
+      var canvasContainer = document.getElementById('canvas-container');
+      while (canvasContainer.firstChild) {
+        canvasContainer.removeChild(canvasContainer.firstChild);
+      }
+      canvasContainer.style.opacity = 1;
+      var canvas = document.createElement('canvas');
+      var context = canvas.getContext('2d');
+    
+      // Set the canvas dimensions to match the image
+      canvas.width = img.width;
+      canvas.height = img.height / 4; // We only want a quarter of the image
+      // Draw only the second quarter of the image onto the canvas
+      context.drawImage(img, 0, img.height / 4, img.width, img.height / 4, 0, 0, canvas.width, canvas.height);
+    
+      // Append the canvas to the canvas container
+      canvasContainer.appendChild(canvas);
+    
+      var imgData = context.getImageData(0, 0, canvas.width, canvas.height);
+      var foundColor = null;
+      for (var i = 0; i < imgData.data.length; i += 4) {
+        var r = imgData.data[i];
+        var g = imgData.data[i + 1];
+        var b = imgData.data[i + 2];
   
+        var colorString = `${r},${g},${b}`;
+        if (ticketColors[colorString]) {
+          foundColor = colorString;
+    
+          // Calculate the x and y coordinates of the pixel
+          var x = (i / 4) % imgData.width;
+          var y = Math.floor((i / 4) / imgData.width);
+    
+          // Draw a small red rectangle at the location of the pixel
+          context.fillStyle = 'red';
+          context.fillRect(x, y, 5, 5);
+    
+          break;
+        }
+      }
+    
+      if (foundColor) {
+        generalColor = ticketColors[foundColor];
+        console.log(ticketColors[foundColor]);
+        document.getElementById('ticket-color').value = ticketColors[foundColor];
+      } else {
+        foundColor = '153,153,153';
+        generalColor = foundColor;
+        console.log('gray');
+        document.getElementById('ticket-color').value = 'Gray';
+      }
+      
+      // Specific colors
+      // Create a new canvas for the second half of the image
+      var canvas2 = document.createElement('canvas');
+      var context2 = canvas2.getContext('2d');
 
-function euclideanDistance(color1, color2) {
-    // Calculate the Euclidean distance between the two colors
-    return Math.sqrt(
-      Math.pow(color1[0] - color2[0], 2) +
-      Math.pow(color1[1] - color2[1], 2) +
-      Math.pow(color1[2] - color2[2], 2)
-    );
+      // Set the canvas dimensions to match the image
+      canvas2.width = img.width;
+      canvas2.height = img.height / 8; // We only want half of the image
+
+      // Draw only the second half of the image onto the canvas
+      context2.drawImage(img, 0, img.height * 6/8, img.width, img.height / 8, 0, 0, canvas2.width, canvas2.height);
+
+      // Append the canvas to the canvas container
+      canvasContainer.appendChild(canvas2);
+
+      // Get the image data from the canvas
+      var imgData2 = context2.getImageData(0, 0, canvas2.width, canvas2.height);
+
+      // Create a frequency counter for the colors
+      var colorCounts = {};
+
+      for (var i = 0; i < imgData2.data.length; i += 4) {
+        var r = imgData2.data[i];
+        var g = imgData2.data[i + 1];
+        var b = imgData2.data[i + 2];
+
+        // Ignore white (or near white), black (or near black), and gray (or near gray) pixels
+        if ((r > 200 && g > 200 && b > 200) || (r < 50 && g < 50 && b < 50) || (Math.abs(r - g) < 10 && Math.abs(r - b) < 10)) {
+          continue;
+        }
+
+        var colorString = `${r},${g},${b}`;
+
+        // Increment the count for this color
+        colorCounts[colorString] = (colorCounts[colorString] || 0) + 1;
+      }
+
+      var overlayCanvas = document.createElement('canvas');
+      var overlayContext = overlayCanvas.getContext('2d');
+
+        // Sort the colors by their frequency and take the top three
+        var topColors = Object.entries(colorCounts)
+        .sort(function(a, b) { return b[1] - a[1]; })
+        .slice(0, 3)
+        .map(function([color, count]) {
+          // Convert the color from 'r,g,b' to '#rrggbb'
+          var [r, g, b] = color.split(',');
+          return '#' + ((1 << 24) + (parseInt(r) << 16) + (parseInt(g) << 8) + parseInt(b)).toString(16).slice(1);
+        })
+        .reverse(); // Reverse the order of the array
+
+        specificColors = topColors; // Set the specific colors
+        console.log(topColors);
+        document.getElementById('color1').value = topColors[0] || '#000000';
+        document.getElementById('color2').value = topColors[1] || '#000000';
+        document.getElementById('color3').value = topColors[2] || '#000000';
+        var endTime = Date.now();
+        var timeElapsedInSec = (endTime - startTime) / 1000;
+        timeElapsed = timeElapsedInSec;
+        document.getElementById('time-elapsed').textContent = `It took ${timeElapsed} seconds to read the screenshot!`;
+    };
+    
   }
+}
 
-// Create a FileReader object
-const reader = new FileReader();
-
-// Bind an event listener to the "change" event of the file input
-fileInput.addEventListener("change", function() {
-    // Get the selected file
-    const file = event.target.files[0];
-
-    // Use the FileReader to read the image as a data URL
-    reader.readAsDataURL(file);
-
-});
-
-// Define a function to run when the FileReader has finished reading the image
-reader.addEventListener('load', () => {
-    // Create an image element
-    const img = document.createElement('img');
-  
-    // Set the img src to the data URL that was read
-    img.src = reader.result;
-  
-    // When the image has finished loading, draw it onto the canvas
-    img.addEventListener('load', () => {
-      // Reduce the size of the image by 80%
-      canvas.getContext('2d').scale(100 / img.width, 100 / img.height);
-
-      // Draw the image onto the canvas
-      canvas.getContext('2d').drawImage(img, 0, 0);
-      //Image rendered and scaled to Webpage
-
-      // Get the canvas context
-      const ctx = canvas.getContext('2d');
-
-      // Get the width and height of the canvas
-      const width = canvas.width;
-      const height = canvas.height;
-
-      const imageData = ctx.getImageData(0, 0, width, height);
-
-      const colorsLoop = [
-        ((30 * canvas.width + 82) * 4),
-        ((85 * canvas.width + 25) * 4),
-        ((85 * canvas.width + 50) * 4),
-        ((85 * canvas.width + 85) * 4),
-      ]
-
-      let counter = 0
-      var colorDef = []
-      var ticketColor = []
-      colorsLoop.forEach(element => {
-        
-        const r = imageData.data[element];
-        const g = imageData.data[element + 1];
-        const b = imageData.data[element + 2];
-        if (counter == 0) {
-            colorDef[counter] = ('')
-            ticketColor = [r,g,b]
-        }
-        else {
-            var rHex = r.toString(16)
-            var gHex = g.toString(16)
-            var bHex = b.toString(16)
-            colorDef[counter] = ('#'+rHex+gHex+bHex)
-        }
-        counter = counter + 1
-      });
-
-
-      //Get first Ticket Color
-      const distances = ticketColorTable.map(color => euclideanDistance(ticketColor, color));
-
-      // Find the index of the smallest distance
-      const closestColorIndex = distances.indexOf(Math.min(...distances));
-
-      console.log(txtColors[closestColorIndex]);
-      dropdownTxtColor.value = txtColors[closestColorIndex]
-      barColor1.value = colorDef[1]
-      barColor2.value = colorDef[2]
-      barColor3.value = colorDef[3]
-
-      //After doing everything, hide the image
-      canvas.style.display = "none"
-    });
-  });
-
+document.getElementById('screenshot').addEventListener('change', handleImageUpload);
